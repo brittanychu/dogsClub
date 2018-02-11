@@ -18964,7 +18964,21 @@ var _axios = __webpack_require__(35);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _Navbar = __webpack_require__(54);
+
+var _Navbar2 = _interopRequireDefault(_Navbar);
+
+var _Dogs = __webpack_require__(55);
+
+var _Dogs2 = _interopRequireDefault(_Dogs);
+
+var _AddNewDog = __webpack_require__(56);
+
+var _AddNewDog2 = _interopRequireDefault(_AddNewDog);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -18978,16 +18992,74 @@ var Main = function (_Component) {
   function Main() {
     _classCallCheck(this, Main);
 
-    return _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
+    var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
+
+    _this.state = {
+      dogs: [],
+      clicked: false,
+      newDog: {}
+    };
+    _this.handleClickAllDogs = _this.handleClickAllDogs.bind(_this);
+    _this.createDog = _this.createDog.bind(_this);
+    return _this;
   }
 
   _createClass(Main, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      _axios2.default.get('/api/dogs').then(function (res) {
+        return res.data;
+      }).then(function (dogs) {
+        return _this2.setState({ dogs: dogs });
+      });
+    }
+  }, {
+    key: 'handleClickAllDogs',
+    value: function handleClickAllDogs() {
+      console.log('clicked!');
+      this.setState({ clicked: true });
+    }
+  }, {
+    key: 'createDog',
+    value: function createDog(event) {
+      var _this3 = this;
+
+      event.preventDefault();
+      var form = event.target.parentNode;
+      var newDog = {
+        name: form.name.value,
+        image: form.image.value
+      };
+
+      _axios2.default.post('/api/dogs', newDog).then(function (res) {
+        return res.data;
+      }).then(function (newDog) {
+        _this3.setState({
+          dog: [newDog].concat(_toConsumableArray(_this3.state.dogs))
+        });
+        console.log(_this3.state.dogs);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _state = this.state,
+          dogs = _state.dogs,
+          clicked = _state.clicked;
+
       return _react2.default.createElement(
-        'h1',
+        'div',
         null,
-        'Hello World!'
+        _react2.default.createElement(
+          'h1',
+          null,
+          'DogsClub'
+        ),
+        _react2.default.createElement(_Navbar2.default, { handleClick: this.handleClickAllDogs }),
+        _react2.default.createElement(_AddNewDog2.default, { createDog: this.createDog }),
+        clicked ? _react2.default.createElement(_Dogs2.default, { dogs: dogs }) : null
       );
     }
   }]);
@@ -19886,6 +19958,160 @@ module.exports = function spread(callback) {
   };
 };
 
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Navbar = function Navbar(props) {
+  var handleClick = props.handleClick;
+
+  return _react2.default.createElement(
+    "div",
+    { id: "nav" },
+    _react2.default.createElement(
+      "button",
+      { id: "dogs", onClick: handleClick },
+      " Show me all the dogs! "
+    )
+  );
+};
+
+exports.default = Navbar;
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Dogs = function Dogs(props) {
+  var dogs = props.dogs;
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'ul',
+      null,
+      dogs.map(function (dog) {
+        return _react2.default.createElement(
+          'div',
+          { key: dog.id },
+          _react2.default.createElement(
+            'h3',
+            null,
+            dog.name
+          ),
+          _react2.default.createElement('img', { src: dog.image })
+        );
+      })
+    )
+  );
+};
+
+exports.default = Dogs;
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AddNewDog = function (_React$Component) {
+  _inherits(AddNewDog, _React$Component);
+
+  function AddNewDog() {
+    _classCallCheck(this, AddNewDog);
+
+    var _this = _possibleConstructorReturn(this, (AddNewDog.__proto__ || Object.getPrototypeOf(AddNewDog)).call(this));
+
+    _this.handleChange = _this.handleChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(AddNewDog, [{
+    key: "handleChange",
+    value: function handleChange(e) {
+      console.log(e.target.value);
+      this.setState({});
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var createDog = this.props.createDog;
+
+      return _react2.default.createElement(
+        "form",
+        null,
+        _react2.default.createElement(
+          "label",
+          null,
+          " Name: "
+        ),
+        _react2.default.createElement("input", { name: "name", onChange: this.handleChange }),
+        _react2.default.createElement(
+          "label",
+          null,
+          " Image Url: "
+        ),
+        _react2.default.createElement("input", { name: "image" }),
+        _react2.default.createElement(
+          "button",
+          { onSubmit: createDog },
+          " Submit "
+        )
+      );
+    }
+  }]);
+
+  return AddNewDog;
+}(_react2.default.Component);
+
+exports.default = AddNewDog;
 
 /***/ })
 /******/ ]);

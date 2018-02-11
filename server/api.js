@@ -9,3 +9,9 @@ router.get('/dogs', (req, res, next) => {
     .then(dogs => res.json(dogs))
     .catch(next)
 })
+
+router.post('/dogs', (req, res, next) => {
+  Dog.create(req.body)
+    .then(dog => res.json(dog))
+    .catch(next)
+})
